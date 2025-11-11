@@ -124,7 +124,13 @@ function route_decision(string $method): void
         return;
     }
 
-    $in  = json_decode($raw, true);
+    try {
+        $in = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
+    } catch (\JsonException $e) {
+        http_response_code(400);
+        echo '{\"ok\":false,\"error\":\"invalid_json\"}';
+        return;
+    }
     if (!is_array($in)) { $in = []; }
 
     $result = decisionResponse($in);
@@ -194,7 +200,7 @@ function route_stats(string $method): void
     $limit = max(1, min($window, 60));
     $sql = "SELECT FLOOR(UNIX_TIMESTAMP(created_at)/60)*60 AS ts, COUNT(*) AS c
               FROM hits WHERE created_at >= FROM_UNIXTIME(:threshold)
-              GROUP BY ts ORDER BY ts ASC LIMIT " . $limit;
+              GROUP BY ts ORDER BY ts ASC LIMIT " . (int) $limit;
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':threshold', $threshold, \PDO::PARAM_INT);
     $stmt->execute();
@@ -255,7 +261,7 @@ function fetch_after(\PDO $pdo, int $afterId, int $limit): array
 {
     $limit = max(1, min($limit, 500));
     $sql = 'SELECT id, UNIX_TIMESTAMP(created_at) AS ts, ip, ua, cid, cc, lp, decision
-            FROM hits WHERE id > :after ORDER BY id ASC LIMIT ' . $limit;
+            FROM hits WHERE id > :after ORDER BY id ASC LIMIT ' . (int) $limit;
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':after', $afterId, \PDO::PARAM_INT);
     $stmt->execute();

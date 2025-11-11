@@ -47,7 +47,13 @@ if (stripos($ct, 'application/json') !== 0) { http_response_code(415); echo '{"o
 if ($len > 8192 && $len > 0) { http_response_code(413); echo '{"ok":false,"error":"payload_too_large"}'; return; }
 
 $raw = (string) (@file_get_contents('php://input', false, null, 0, 8192) ?: '');
-$in  = json_decode($raw, true);
+try {
+    $in = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
+} catch (\JsonException $e) {
+    http_response_code(400);
+    echo '{\"ok\":false,\"error\":\"invalid_json\"}';
+    return;
+}
 if (!is_array($in)) { $in = []; }
 
 $partial = [];

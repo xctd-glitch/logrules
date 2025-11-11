@@ -138,6 +138,10 @@ function assertRedirectUrl(string $url): string
         return '';
     }
 
+    if (strlen($url) > 2048) {
+        return '';
+    }
+
     if (!preg_match('~^[a-z][a-z0-9+.-]*://~i', $url)) {
         $url = 'https://' . $url;
     }
@@ -153,7 +157,11 @@ function assertRedirectUrl(string $url): string
     }
 
     $host = strtolower((string) $parts['host']);
-    if (strlen($host) > 253) {
+    if (strlen($host) > 253 || strlen($host) < 1) {
+        return '';
+    }
+
+    if (!preg_match('~^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$~i', $host)) {
         return '';
     }
 
@@ -207,7 +215,11 @@ function cfg(): array
         ];
     }
 
-    $decoded = json_decode((string) ($row['allowed_countries'] ?? '[]'), true, 16);
+    try {
+        $decoded = json_decode((string) ($row['allowed_countries'] ?? '[]'), true, 16, JSON_THROW_ON_ERROR);
+    } catch (\JsonException $e) {
+        $decoded = [];
+    }
     $countries = is_array($decoded)
         ? CountryCodeValidator::sanitizeList($decoded)
         : [];
@@ -371,7 +383,7 @@ function clientIp(): string
 
         foreach (explode(',', $raw) as $part) {
             $ip = trim($part);
-            if ($ip === '') {
+            if ($ip === '' || strlen($ip) > 45) {
                 continue;
             }
 
@@ -383,8 +395,12 @@ function clientIp(): string
     }
 
     $fallback = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    if (!is_string($fallback)) {
+        return '0.0.0.0';
+    }
 
-    return is_string($fallback) ? $fallback : '0.0.0.0';
+    $validated = filter_var($fallback, FILTER_VALIDATE_IP);
+    return $validated !== false ? $validated : '0.0.0.0';
 }
 
 function httpGet(string $url, int $timeoutMs = 1500, int $connectTimeoutMs = 750): ?string
@@ -434,12 +450,11 @@ function readLimitedStream(string $source, int $limit): array
 
     try {
         $data = stream_get_contents($handle, $limit + 1);
+        if ($data === false) {
+            return ['', false];
+        }
     } finally {
-        fclose($handle);
-    }
-
-    if ($data === false) {
-        return ['', false];
+        @fclose($handle);
     }
 
     if (strlen($data) > $limit) {
@@ -464,10 +479,14 @@ function cacheGet(string $namespace, string $key, mixed &$out): bool
     if (is_file($path)) {
         $raw = @file_get_contents($path);
         if (is_string($raw)) {
-            $decoded = json_decode($raw, true, 4);
-            if (is_array($decoded) && isset($decoded['exp']) && time() < (int) $decoded['exp']) {
-                $out = $decoded['val'] ?? null;
-                return true;
+            try {
+                $decoded = json_decode($raw, true, 4, JSON_THROW_ON_ERROR);
+                if (is_array($decoded) && isset($decoded['exp']) && time() < (int) $decoded['exp']) {
+                    $out = $decoded['val'] ?? null;
+                    return true;
+                }
+            } catch (\JsonException $e) {
+                @unlink($path);
             }
         }
     }
