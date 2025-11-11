@@ -60,7 +60,7 @@ function fetchHitsAfter(\PDO $pdo, int $afterId, int $limit): array
 {
     $limit = max(1, min($limit, 500));
     $sql = 'SELECT id, UNIX_TIMESTAMP(created_at) AS ts, ip, ua, cid, cc, lp, decision
-            FROM hits WHERE id > :after ORDER BY id ASC LIMIT ' . $limit;
+            FROM hits WHERE id > :after ORDER BY id ASC LIMIT ' . (int) $limit;
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':after', $afterId, \PDO::PARAM_INT);
     $stmt->execute();

@@ -1,0 +1,539 @@
+/**
+ * Smart Redirect Platform - Realtime Monitor Styles
+ * Specialized styles for real-time data visualization
+ * Version: 2.0
+ */
+
+/* Import base design tokens from dashboard.css */
+@import url('dashboard.css');
+
+/* ========================================================================
+   REALTIME-SPECIFIC OVERRIDES
+   ======================================================================== */
+
+:root {
+  /* Realtime-specific colors */
+  --color-pill-a: #3b82f6;
+  --color-pill-a-bg: rgba(59, 130, 246, 0.15);
+  --color-pill-b: #8b5cf6;
+  --color-pill-b-bg: rgba(139, 92, 246, 0.15);
+  
+  /* Table colors */
+  --color-table-header-bg: var(--color-bg-tertiary);
+  --color-table-row-hover: var(--color-hover-overlay);
+  --color-table-border: var(--color-card-border);
+  --color-table-stripe: rgba(255, 255, 255, 0.02);
+}
+
+html.light {
+  --color-table-stripe: rgba(0, 0, 0, 0.02);
+}
+
+/* ========================================================================
+   LAYOUT
+   ======================================================================== */
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+}
+
+/* ========================================================================
+   PAGE HEADER
+   ======================================================================== */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-card-border);
+}
+
+.page-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg-primary);
+  letter-spacing: -0.025em;
+  line-height: var(--line-height-tight);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* ========================================================================
+   AUTH SECTION
+   ======================================================================== */
+
+.auth-section {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ========================================================================
+   METRICS GRID
+   ======================================================================== */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.metric-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.metric-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.metric-value {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg-primary);
+  line-height: 1;
+  margin-bottom: var(--spacing-md);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-pills {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+/* ========================================================================
+   PILL COMPONENT (A/B Indicators)
+   ======================================================================== */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  font-variant-numeric: tabular-nums;
+}
+
+.pill-a {
+  background-color: var(--color-pill-a-bg);
+  color: var(--color-pill-a);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.pill-b {
+  background-color: var(--color-pill-b-bg);
+  color: var(--color-pill-b);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* ========================================================================
+   SERVER TIME DISPLAY
+   ======================================================================== */
+
+.server-time {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent-info);
+  margin-top: var(--spacing-md);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================================================
+   CHART CONTAINER
+   ======================================================================== */
+
+.chart-container {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-lg);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.chart-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-primary);
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 300px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-card-border);
+}
+
+@media (max-width: 768px) {
+  .chart-wrapper {
+    height: 250px;
+  }
+}
+
+/* ========================================================================
+   TABLE CONTAINER
+   ======================================================================== */
+
+.table-container {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 600px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-table-border);
+}
+
+/* ========================================================================
+   TABLE STYLES
+   ======================================================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  background-color: var(--color-bg-secondary);
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-table-header-bg);
+  backdrop-filter: blur(8px);
+}
+
+thead th {
+  padding: var(--spacing-md);
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-secondary);
+  text-transform: uppercase;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-table-border);
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--color-table-border);
+  transition: background-color var(--transition-fast);
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--color-table-stripe);
+}
+
+tbody tr:hover {
+  background-color: var(--color-table-row-hover);
+}
+
+tbody td {
+  padding: var(--spacing-md);
+  color: var(--color-fg-primary);
+  vertical-align: middle;
+  line-height: var(--line-height-normal);
+}
+
+/* Table cell modifiers */
+.cell-mono {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-fg-secondary);
+}
+
+.cell-center {
+  text-align: center;
+}
+
+.cell-uppercase {
+  text-transform: uppercase;
+  font-weight: var(--font-weight-semibold);
+}
+
+.cell-truncate {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .cell-truncate {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: var(--font-size-xs);
+  }
+  
+  thead th,
+  tbody td {
+    padding: var(--spacing-sm);
+  }
+  
+  .cell-truncate {
+    max-width: 150px;
+  }
+}
+
+/* ========================================================================
+   EMPTY STATE
+   ======================================================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3xl);
+  text-align: center;
+  color: var(--color-fg-muted);
+}
+
+.empty-state-icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.empty-state-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-fg-muted);
+}
+
+/* ========================================================================
+   LOADING STATES
+   ======================================================================== */
+
+.loading-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-card-border);
+  border-top-color: var(--color-accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-dots {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.loading-dots span {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--color-accent-primary);
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========================================================================
+   REALTIME INDICATORS
+   ======================================================================== */
+
+.realtime-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--color-accent-success-light);
+  color: var(--color-accent-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.realtime-badge::before {
+  content: '';
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--color-accent-success);
+  border-radius: 50%;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  box-shadow: 0 0 8px var(--color-accent-success);
+}
+
+/* ========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ======================================================================== */
+
+@media (max-width: 640px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .metric-value {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .page-title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* ========================================================================
+   PRINT STYLES
+   ======================================================================== */
+
+@media print {
+  .page-header,
+  .auth-section,
+  .controls,
+  .btn {
+    display: none;
+  }
+  
+  .table-wrapper {
+    max-height: none;
+    overflow: visible;
+  }
+  
+  .chart-container {
+    break-inside: avoid;
+  }
+  
+  tbody tr:hover {
+    background-color: transparent;
+  }
+}
+
+/* ========================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner,
+  .loading-dots span,
+  .realtime-badge::before {
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card,
+  .metric-card,
+  .chart-container,
+  .table-container {
+    border-width: 2px;
+  }
+  
+  table {
+    border: 2px solid currentColor;
+  }
+  
+  thead th {
+    border-bottom-width: 3px;
+  }
+}

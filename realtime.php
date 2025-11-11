@@ -12,245 +12,106 @@ header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header(
     'Content-Security-Policy: default-src \'self\'; ' .
-    "script-src 'self' https://cdn.jsdelivr.net 'nonce-$nonce'; " .
-    "style-src 'self' 'nonce-$nonce'; img-src 'self' data:; connect-src 'self'; font-src 'self'; " .
+    "script-src 'self' https://cdn.jsdelivr.net 'nonce-{$nonce}'; " .
+    "style-src 'self' https://cdn.jsdelivr.net 'nonce-{$nonce}'; " .
+    "img-src 'self' data:; connect-src 'self'; font-src 'self'; " .
     "manifest-src 'self'; worker-src 'self'; base-uri 'self'; frame-ancestors 'none';"
 );
-?>
-<!doctype html>
-<html lang="id" class="page">
+
+?><!doctype html>
+<html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Realtime Clicks · SRP</title>
-  <meta name="referrer" content="no-referrer" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="application-name" content="Smart Redirect" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <link rel="icon" type="image/svg+xml" sizes="any" href="assets/icons/icon-192.svg" />
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.svg" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <style nonce="<?= htmlspecialchars($nonce, ENT_QUOTES) ?>">
-    :root {
-      color-scheme: light dark;
-      --bg: #f8fafc;
-      --fg: #111827;
-      --card-bg: #ffffff;
-      --card-border: #e5e7eb;
-      --muted: #6b7280;
-      --pill-a-bg: #ecfdf5;
-      --pill-a-fg: #047857;
-      --pill-b-bg: #fef2f2;
-      --pill-b-fg: #b91c1c;
-      --radius: 0.5rem;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    html.dark {
-      --bg: #0f172a;
-      --fg: #e2e8f0;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --muted: #94a3b8;
-      --pill-a-bg: #064e3b;
-      --pill-a-fg: #bbf7d0;
-      --pill-b-bg: #7f1d1d;
-      --pill-b-fg: #fecaca;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--fg);
-      font-size: 16px;
-      line-height: 1.5;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-    h1 {
-      font-size: 1.5rem;
-      margin: 0;
-    }
-    .controls {
-      display: inline-flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 0.85rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--card-border);
-      background: var(--card-bg);
-      color: inherit;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .btn:focus-visible {
-      outline: 2px solid #2563eb;
-      outline-offset: 2px;
-    }
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-      padding: 1.25rem;
-    }
-    .muted {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.25rem 0.5rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      border: 1px solid transparent;
-    }
-    .pill-a {
-      background: var(--pill-a-bg);
-      color: var(--pill-a-fg);
-      border-color: rgba(16, 185, 129, 0.45);
-    }
-    .pill-b {
-      background: var(--pill-b-bg);
-      color: var(--pill-b-fg);
-      border-color: rgba(239, 68, 68, 0.45);
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 0.88rem;
-    }
-    th, td {
-      padding: 0.6rem 0.75rem;
-      border-bottom: 1px solid var(--card-border);
-      vertical-align: middle;
-    }
-    th {
-      text-align: left;
-      color: var(--muted);
-      position: sticky;
-      top: 0;
-      background: var(--card-bg);
-      z-index: 1;
-    }
-    tbody tr:hover {
-      background: rgba(148, 163, 184, 0.15);
-    }
-    input {
-      width: 100%;
-      padding: 0.6rem 0.75rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--card-border);
-      background: #fff;
-      color: #111827;
-      font-size: 0.95rem;
-    }
-    html.dark input {
-      background: #0f172a;
-      border-color: #334155;
-      color: #e2e8f0;
-    }
-    .grid {
-      display: grid;
-      gap: 1rem;
-    }
-    @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-  </style>
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="application-name" content="Smart Redirect">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="assets/icons/icon-192.svg">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="assets/css/realtime.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" integrity="sha384-VlaQt1zArhcXd1LSeX776BF3/f6/Dr7guPmyAnbcWcCYwiVdc+GqOR/mdrIW6DCe" crossorigin="anonymous" defer></script>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>Realtime Clicks</h1>
+    <header class="page-header">
+      <h1 class="page-title">Realtime Clicks</h1>
       <div class="controls">
-        <button id="toggleTheme" class="btn" type="button" aria-pressed="false">🌗</button>
-        <a href="index.php" class="btn" rel="noreferrer">Dashboard</a>
+        <button id="toggleTheme" class="btn btn-ghost" type="button" aria-pressed="false" aria-label="Toggle theme">
+          <span aria-hidden="true">🌗</span>
+        </button>
+        <a href="index.php" class="btn btn-secondary" rel="noreferrer">Dashboard</a>
       </div>
     </header>
 
-    <section class="card" aria-label="Autentikasi">
-      <label class="muted" for="apiKey">API Key (X-API-Key)</label>
-      <input id="apiKey" type="password" autocomplete="off" placeholder="tempel API key untuk admin" />
+    <section class="auth-section" aria-label="Autentikasi">
+      <div class="form-group">
+        <label class="form-label" for="apiKey">API Key (X-API-Key)</label>
+        <input id="apiKey" type="password" autocomplete="off" placeholder="tempel API key untuk admin" class="form-input">
+      </div>
     </section>
 
-    <section class="grid">
-      <div class="card">
-        <div class="muted">Total (15m)</div>
-        <div id="mTotal" style="font-size:2rem;font-weight:600;">0</div>
-        <div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total (15m)</div>
+        <div class="metric-value" id="mTotal">0</div>
+        <div class="metric-pills">
           <span class="pill pill-a">A: <span id="mA">0</span></span>
           <span class="pill pill-b">B: <span id="mB">0</span></span>
         </div>
       </div>
-      <div class="card">
-        <div class="muted">Top Countries (15m)</div>
-        <div id="mCountries" style="margin-top:0.75rem;font-family:'JetBrains Mono','SFMono-Regular',Consolas,monospace;">-</div>
+
+      <div class="metric-card">
+        <div class="metric-label">Top Countries (15m)</div>
+        <div class="font-mono text-sm" id="mCountries" style="margin-top: var(--spacing-md);">-</div>
       </div>
-      <div class="card">
-        <div class="muted">Server Time</div>
-        <div id="srvTime" style="font-size:2rem;font-weight:600;">-</div>
+
+      <div class="metric-card">
+        <div class="metric-label">Server Time</div>
+        <div class="server-time" id="srvTime">-</div>
       </div>
     </section>
 
-    <section class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
-        <div class="muted">Traffic (per menit, 15m)</div>
-        <div class="muted">auto refresh</div>
+    <section class="chart-container">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Traffic (per menit, 15m)</div>
+          <div class="text-xs text-muted">auto refresh</div>
+        </div>
       </div>
-      <canvas id="chart" height="120" style="margin-top:1rem;"></canvas>
+      <div class="chart-wrapper">
+        <canvas id="chart" aria-label="Traffic chart"></canvas>
+      </div>
     </section>
 
-    <section class="card" style="overflow:auto;">
-      <table aria-label="Realtime clicks">
-        <thead>
-          <tr>
-            <th scope="col">Time</th>
-            <th scope="col">CC</th>
-            <th scope="col">Dec</th>
-            <th scope="col">Click ID</th>
-            <th scope="col">LP</th>
-            <th scope="col">IP</th>
-            <th scope="col">Device</th>
-            <th scope="col">UA</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
+    <section class="table-container">
+      <div class="table-wrapper scroll-area">
+        <table aria-label="Realtime clicks">
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">CC</th>
+              <th scope="col">Dec</th>
+              <th scope="col">Click ID</th>
+              <th scope="col">LP</th>
+              <th scope="col">IP</th>
+              <th scope="col">Device</th>
+              <th scope="col">UA</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
     </section>
   </div>
 
-  <script nonce="<?= htmlspecialchars($nonce, ENT_QUOTES) ?>">
+  <script nonce="<?= htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') ?>">
+    'use strict';
+
     const ready = (callback) => {
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
         callback();
@@ -262,12 +123,8 @@ header(
     ready(() => {
       const $ = (selector) => document.querySelector(selector);
       const store = {
-        get key() {
-          return localStorage.getItem('srp_key') ?? '';
-        },
-        set key(value) {
-          localStorage.setItem('srp_key', value);
-        }
+        get key() { return localStorage.getItem('srp_key') ?? ''; },
+        set key(value) { localStorage.setItem('srp_key', value); }
       };
 
       if ('serviceWorker' in navigator) {
@@ -276,9 +133,18 @@ header(
 
       const html = document.documentElement;
       const toggleTheme = $('#toggleTheme');
+      
+      const savedTheme = localStorage.getItem('srp_theme') ?? 'dark';
+      if (savedTheme === 'light') {
+        html.classList.add('light');
+        toggleTheme.setAttribute('aria-pressed', 'true');
+      }
+
       toggleTheme.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        toggleTheme.setAttribute('aria-pressed', String(html.classList.contains('dark')));
+        html.classList.toggle('light');
+        const isLight = html.classList.contains('light');
+        toggleTheme.setAttribute('aria-pressed', String(isLight));
+        localStorage.setItem('srp_theme', isLight ? 'light' : 'dark');
       });
 
       $('#apiKey').value = store.key;
@@ -287,13 +153,14 @@ header(
       });
 
       const headers = () => ({ 'X-API-Key': store.key });
-      const escape = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      })[char]);
+      
+      const escape = (value) => {
+        const text = String(value ?? '');
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      };
+
       const formatTime = (timestamp) => new Date(timestamp * 1000).toLocaleTimeString();
 
       let lastId = 0;
@@ -302,9 +169,7 @@ header(
       const chartData = [];
 
       function ensureChart() {
-        if (chart) {
-          return;
-        }
+        if (chart) return;
         const ctx = document.getElementById('chart');
         chart = new window.Chart(ctx, {
           type: 'line',
@@ -316,15 +181,27 @@ header(
               tension: 0.25,
               fill: false,
               borderColor: '#2563eb',
-              backgroundColor: 'rgba(37,99,235,0.25)'
+              backgroundColor: 'rgba(37,99,235,0.25)',
+              borderWidth: 2,
+              pointRadius: 3,
+              pointBackgroundColor: '#2563eb'
             }]
           },
           options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-              x: { display: true },
-              y: { beginAtZero: true }
+              x: { 
+                display: true,
+                ticks: { color: '#94a3b8' },
+                grid: { color: 'rgba(148,163,184,0.1)' }
+              },
+              y: { 
+                beginAtZero: true,
+                ticks: { color: '#94a3b8' },
+                grid: { color: 'rgba(148,163,184,0.1)' }
+              }
             }
           }
         });
@@ -346,15 +223,19 @@ header(
         const fragment = document.createDocumentFragment();
         for (const hit of hits) {
           const row = document.createElement('tr');
+          const decisionPill = hit.decision === 'A' 
+            ? '<span class="pill pill-a">A</span>' 
+            : '<span class="pill pill-b">B</span>';
+          
           row.innerHTML = `
             <td>${formatTime(hit.ts)}</td>
-            <td style="text-transform:uppercase;font-family:'JetBrains Mono',monospace;text-align:center;">${escape(hit.cc)}</td>
-            <td style="text-align:center;">${hit.decision === 'A' ? '<span class="pill pill-a">A</span>' : '<span class="pill pill-b">B</span>'}</td>
-            <td style="font-family:'JetBrains Mono',monospace;">${escape(hit.cid)}</td>
-            <td style="font-family:'JetBrains Mono',monospace;">${escape(hit.lp)}</td>
-            <td style="font-family:'JetBrains Mono',monospace;">${escape(hit.ip)}</td>
-            <td style="font-family:'JetBrains Mono',monospace;">${escape(hit.device ?? '')}</td>
-            <td>${escape(hit.ua.slice(0, 120))}${hit.ua.length > 120 ? '…' : ''}</td>`;
+            <td class="cell-mono cell-center cell-uppercase">${escape(hit.cc)}</td>
+            <td class="cell-center">${decisionPill}</td>
+            <td class="cell-mono">${escape(hit.cid)}</td>
+            <td class="cell-mono cell-truncate">${escape(hit.lp)}</td>
+            <td class="cell-mono">${escape(hit.ip)}</td>
+            <td class="cell-mono">${escape(hit.device ?? '')}</td>
+            <td class="cell-truncate">${escape(hit.ua.slice(0, 120))}${hit.ua.length > 120 ? '…' : ''}</td>`;
           fragment.insertBefore(row, fragment.firstChild);
         }
         tbody.insertBefore(fragment, tbody.firstChild);
@@ -401,7 +282,7 @@ header(
             applyStats(payload.stats);
           }
         } catch (error) {
-          /* transient failure ignored */
+          console.error('Poll error:', error);
         } finally {
           window.setTimeout(poll, 400);
         }

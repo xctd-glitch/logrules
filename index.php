@@ -12,144 +12,46 @@ header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header(
     'Content-Security-Policy: default-src \'self\'; ' .
-    "script-src 'self' https://cdn.jsdelivr.net 'nonce-$nonce'; " .
-    "style-src 'self' https://cdn.jsdelivr.net 'nonce-$nonce'; img-src 'self' data:; connect-src 'self'; " .
+    "script-src 'self' https://cdn.jsdelivr.net 'nonce-{$nonce}'; " .
+    "style-src 'self' https://cdn.jsdelivr.net 'nonce-{$nonce}'; " .
+    "img-src 'self' data:; connect-src 'self'; font-src 'self'; " .
     "manifest-src 'self'; worker-src 'self'; base-uri 'self'; frame-ancestors 'none';"
 );
-?>
-<!doctype html>
-<html lang="id" class="page">
+
+?><!doctype html>
+<html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Smart Redirect Dashboard</title>
-  <meta name="referrer" content="no-referrer" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="application-name" content="Smart Redirect" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <link rel="icon" type="image/svg+xml" sizes="any" href="assets/icons/icon-192.svg" />
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.svg" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.7/dist/tailwind.min.css"
-    integrity="sha384-+OYh4nHfTGUQ6faQSdqlxyVay7oRcppDAChDYyQfOrTcJ6YGp2wTuI+BAIvo6z3s"
-    crossorigin="anonymous"
-  />
-  <style nonce="<?= htmlspecialchars($nonce, ENT_QUOTES) ?>">
-    :root {
-      color-scheme: light dark;
-      --background: #0f172a;
-      --foreground: #e2e8f0;
-      --card: #f8fafc;
-      --card-foreground: #0f172a;
-      --card-border: rgba(148, 163, 184, 0.35);
-      --muted: #94a3b8;
-      --accent: #0ea5e9;
-      --accent-foreground: #0f172a;
-      --radius: 0.75rem;
-      font-family: 'Inter', 'SF Pro Text', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    html.light {
-      --background: #f3f4f6;
-      --foreground: #0f172a;
-      --card: #ffffff;
-      --card-foreground: #0f172a;
-      --card-border: rgba(15, 23, 42, 0.08);
-      --muted: #64748b;
-      --accent: #2563eb;
-      --accent-foreground: #f8fafc;
-    }
-
-    .bg-background { background-color: var(--background); }
-    .text-foreground { color: var(--foreground); }
-    .bg-card { background-color: var(--card); }
-    .text-card-foreground { color: var(--card-foreground); }
-    .border-card { border-color: var(--card-border); }
-    .text-muted-foreground { color: var(--muted); }
-    .bg-primary { background-color: var(--accent); }
-    .text-primary-foreground { color: var(--accent-foreground); }
-
-    .shadcn-card {
-      border-radius: var(--radius);
-      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.35);
-      transition: transform 180ms ease, box-shadow 180ms ease;
-    }
-
-    .shadcn-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 40px 120px rgba(15, 23, 42, 0.45);
-    }
-
-    .btn-primary {
-      border-radius: calc(var(--radius) / 1.5);
-      transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
-      box-shadow: 0 10px 30px rgba(15, 15, 15, 0.25);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 40px rgba(15, 15, 15, 0.35);
-    }
-
-    .btn-ghost {
-      border-radius: calc(var(--radius) / 1.5);
-      transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
-    }
-
-    .btn-ghost:hover {
-      transform: translateY(-1px);
-    }
-
-    .switch-thumb {
-      transition: transform 200ms ease;
-    }
-
-    .toast-enter {
-      animation: toast-in 220ms ease forwards;
-    }
-
-    @keyframes toast-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .scroll-area::-webkit-scrollbar { width: 8px; }
-    .scroll-area::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.45); }
-    .scroll-area::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.6);
-      border-radius: 9999px;
-    }
-  </style>
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="application-name" content="Smart Redirect">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="assets/icons/icon-192.svg">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.7/dist/tailwind.min.css" integrity="sha384-+OYh4nHfTGUQ6faQSdqlxyVay7oRcppDAChDYyQfOrTcJ6YGp2wTuI+BAIvo6z3s" crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" integrity="sha384-VlaQt1zArhcXd1LSeX776BF3/f6/Dr7guPmyAnbcWcCYwiVdc+GqOR/mdrIW6DCe" crossorigin="anonymous" defer></script>
 </head>
-<body class="bg-background text-foreground min-h-screen">
+<body>
   <div class="flex min-h-screen flex-col">
     <header class="sticky top-0 z-40 border-b border-white/10 bg-slate-950/95 backdrop-blur">
-      <div class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 text-white sm:flex-row sm:items-center sm:justify-between">
+      <div class="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-6 text-white sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
           <p class="text-xs uppercase tracking-[0.4em] text-blue-300">Smart Redirect Platform</p>
           <h1 class="text-2xl font-semibold leading-tight sm:text-3xl">Command &amp; Control Dashboard</h1>
           <p class="text-sm text-slate-300">Monitor performa, atur konfigurasi, dan akses dokumentasi API dalam satu layar.</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <button
-            id="toggleTheme"
-            class="btn-ghost inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-lg transition hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
-            type="button"
-            aria-pressed="false"
-          >
+          <button id="toggleTheme" class="btn btn-ghost" type="button" aria-pressed="false" aria-label="Toggle theme">
             <span aria-hidden="true">🌗</span>
             <span class="hidden sm:inline">Mode</span>
           </button>
-          <a
-            class="btn-primary inline-flex items-center gap-2 rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
-            href="realtime.php"
-            rel="noreferrer"
-          >
+          <a class="btn btn-primary" href="realtime.php" rel="noreferrer">
             <span aria-hidden="true">📈</span>
             <span>Realtime Monitor</span>
           </a>
@@ -159,6 +61,8 @@ header(
 
     <main class="flex-1">
       <div class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10">
+        
+        <!-- Stats Section -->
         <section aria-labelledby="statsTitle" class="space-y-6">
           <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
@@ -166,61 +70,66 @@ header(
               <p class="text-sm text-slate-300">Statistik 15 menit terakhir dengan indikator status sistem secara langsung.</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
-              <div class="flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-slate-400">
-                <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400" id="statusPulse" aria-hidden="true"></span>
+              <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot" id="statusPulse" aria-hidden="true"></span>
                 <span id="statusText">Idle</span>
               </div>
-              <button
-                id="refreshStats"
-                class="btn-primary inline-flex items-center gap-2 rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
-                type="button"
-              >
+              <button id="refreshStats" class="btn btn-primary" type="button" aria-label="Refresh statistics">
                 <span aria-hidden="true">🔄</span>
                 <span>Refresh</span>
               </button>
             </div>
           </div>
-          <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4" id="statsCards">
-            <article class="shadcn-card bg-card text-card-foreground border border-card p-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-medium text-muted-foreground">Total Clicks (15m)</h3>
-                <span class="text-xs text-muted-foreground" id="statsWindow">15m</span>
+
+          <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4" id="statsCards">
+            <article class="card">
+              <div class="card-header">
+                <h3 class="card-title">Total Clicks (15m)</h3>
+                <span class="text-xs text-muted" id="statsWindow">15m</span>
               </div>
-              <p class="mt-4 text-4xl font-semibold tracking-tight" id="statTotal">0</p>
-              <p class="mt-2 text-xs text-muted-foreground">Performa terbaru sistem.</p>
+              <p class="card-value" id="statTotal">0</p>
+              <p class="card-description">Performa terbaru sistem.</p>
             </article>
-            <article class="shadcn-card bg-card text-card-foreground border border-card p-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-medium text-muted-foreground">Variant A</h3>
-                <span class="rounded-full bg-slate-900 px-2 py-0.5 text-xs font-semibold text-white">Active</span>
+
+            <article class="card">
+              <div class="card-header">
+                <h3 class="card-title">Variant A</h3>
+                <span class="badge badge-success">Active</span>
               </div>
-              <p class="mt-4 text-3xl font-semibold tracking-tight" id="statA">0</p>
-              <p class="mt-2 text-xs text-muted-foreground">Distribusi ke landing page eksperimen A.</p>
+              <p class="card-value" id="statA">0</p>
+              <p class="card-description">Distribusi ke landing page eksperimen A.</p>
             </article>
-            <article class="shadcn-card bg-card text-card-foreground border border-card p-6">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-medium text-muted-foreground">Variant B</h3>
-                <span class="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-700">Muted</span>
+
+            <article class="card">
+              <div class="card-header">
+                <h3 class="card-title">Variant B</h3>
+                <span class="badge badge-muted">Muted</span>
               </div>
-              <p class="mt-4 text-3xl font-semibold tracking-tight" id="statB">0</p>
-              <p class="mt-2 text-xs text-muted-foreground">Distribusi ke landing page eksperimen B.</p>
+              <p class="card-value" id="statB">0</p>
+              <p class="card-description">Distribusi ke landing page eksperimen B.</p>
             </article>
-            <article class="shadcn-card bg-card text-card-foreground border border-card p-6">
-              <h3 class="text-sm font-medium text-muted-foreground">Top Countries</h3>
-              <p class="mt-4 text-lg font-semibold tracking-tight" id="statCountries">-</p>
-              <p class="mt-2 text-xs text-muted-foreground">5 negara teratas berdasarkan volume klik.</p>
-              <p class="mt-6 text-xs text-muted-foreground">Update <span id="statUpdated">-</span></p>
+
+            <article class="card">
+              <h3 class="card-title">Top Countries</h3>
+              <p class="card-value text-lg" id="statCountries">-</p>
+              <p class="card-description">5 negara teratas berdasarkan volume klik.</p>
+              <p class="mt-4 text-xs text-muted">Update <span id="statUpdated">-</span></p>
             </article>
           </div>
-          <div class="rounded-2xl border border-white/10 bg-slate-950/70 p-6 shadow-xl">
+
+          <div class="card">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="text-sm font-semibold text-white">Traffic Trend</h3>
                 <p class="text-xs text-slate-400">Per menit dalam jendela 15 menit. Kurva diperbarui otomatis setiap refresh.</p>
               </div>
               <div class="flex items-center gap-3 text-xs text-slate-400">
-                <span class="inline-flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-sky-400"></span>Clicks/min</span>
-                <span class="inline-flex items-center gap-1" id="chartStatus"><span class="h-2 w-2 rounded-full bg-emerald-400"></span>Ready</span>
+                <span class="inline-flex items-center gap-1">
+                  <span class="h-2 w-2 rounded-full bg-sky-400"></span>Clicks/min
+                </span>
+                <span class="inline-flex items-center gap-1" id="chartStatus">
+                  <span class="h-2 w-2 rounded-full bg-emerald-400"></span>Ready
+                </span>
               </div>
             </div>
             <div class="mt-6 h-56 overflow-hidden rounded-xl bg-slate-900/60 p-3">
@@ -229,6 +138,7 @@ header(
           </div>
         </section>
 
+        <!-- Config Section -->
         <section aria-labelledby="configTitle" class="space-y-6">
           <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -249,79 +159,51 @@ header(
               </button>.
             </div>
 
-            <div class="grid gap-6 lg:grid-cols-[1fr_1fr]">
+            <div class="grid gap-6 lg:grid-cols-2">
               <div class="space-y-6">
-                <div class="rounded-2xl border border-card bg-card p-6 text-card-foreground shadow-lg">
-                  <label class="flex flex-col gap-2 text-sm font-medium text-muted-foreground" for="apiKey">
-                    API Key (X-API-Key)
-                    <input
-                      id="apiKey"
-                      type="password"
-                      autocomplete="off"
-                      placeholder="tempel API key admin"
-                      class="w-full rounded-xl border border-slate-200/60 bg-white/90 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm transition focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
-                    />
-                  </label>
-                  <p class="mt-2 text-xs text-muted-foreground">Kunci disimpan lokal di browser (localStorage).</p>
+                <div class="card">
+                  <div class="form-group">
+                    <label class="form-label" for="apiKey">API Key (X-API-Key)</label>
+                    <input id="apiKey" type="password" autocomplete="off" placeholder="tempel API key admin" class="form-input">
+                    <p class="text-xs text-muted">Kunci disimpan lokal di browser (localStorage).</p>
+                  </div>
                 </div>
 
-                <div class="rounded-2xl border border-card bg-card p-6 text-card-foreground shadow-lg">
+                <div class="card">
                   <div class="flex items-start justify-between gap-4">
                     <div>
-                      <p class="text-sm font-semibold text-slate-900">System Switch</p>
-                      <p class="text-xs text-muted-foreground">Aktifkan atau hentikan distribusi redirect secara instan.</p>
+                      <p class="text-sm font-semibold">System Switch</p>
+                      <p class="text-xs text-muted">Aktifkan atau hentikan distribusi redirect secara instan.</p>
                     </div>
-                    <button
-                      id="btnSystem"
-                      type="button"
-                      role="switch"
-                      aria-checked="false"
-                      class="relative inline-flex h-10 w-20 items-center rounded-full border border-slate-200 bg-slate-200 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
-                      data-on="false"
-                    >
-                      <span class="switch-thumb absolute left-1 top-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-xs font-semibold text-slate-700 shadow ring-1 ring-slate-200 transition">OFF</span>
+                    <button id="btnSystem" type="button" role="switch" aria-checked="false" class="switch" data-on="false">
+                      <span class="switch-thumb">OFF</span>
                     </button>
                   </div>
-                  <p class="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                  <p class="mt-3 flex items-center gap-2 text-xs text-muted">
                     <span class="inline-flex h-2 w-2 rounded-full bg-rose-500" id="systemStatusDot" aria-hidden="true"></span>
                     <span id="systemStatusText">System OFF</span>
                   </p>
                 </div>
               </div>
 
-              <div class="rounded-2xl border border-card bg-card p-6 text-card-foreground shadow-lg">
+              <div class="card">
                 <div class="space-y-4">
-                  <label class="flex flex-col gap-2 text-sm font-medium text-muted-foreground" for="redirectUrl">
-                    Redirect URL
-                    <input
-                      id="redirectUrl"
-                      type="url"
-                      inputmode="url"
-                      autocomplete="off"
-                      placeholder="https://example.com/path"
-                      class="w-full rounded-xl border border-slate-200/60 bg-white/90 px-4 py-3 text-sm font-medium text-slate-900 shadow-sm transition focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
-                    />
-                  </label>
-                  <label class="flex flex-col gap-2 text-sm font-medium text-muted-foreground" for="allowedCountries">
-                    Allowed Countries (CSV)
-                    <textarea
-                      id="allowedCountries"
-                      spellcheck="false"
-                      rows="6"
-                      class="w-full rounded-xl border border-slate-200/60 bg-white/90 px-4 py-3 font-mono text-sm text-slate-900 shadow-sm transition focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
-                      placeholder="ID,US,GB"
-                    ></textarea>
-                  </label>
+                  <div class="form-group">
+                    <label class="form-label" for="redirectUrl">Redirect URL</label>
+                    <input id="redirectUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://example.com/path" class="form-input">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="allowedCountries">Allowed Countries (CSV)</label>
+                    <textarea id="allowedCountries" spellcheck="false" rows="6" class="form-textarea" placeholder="ID,US,GB"></textarea>
+                  </div>
+
                   <div class="flex flex-wrap items-center gap-3">
-                    <button
-                      id="btnSave"
-                      type="button"
-                      class="btn-primary inline-flex items-center gap-2 rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
-                    >
+                    <button id="btnSave" type="button" class="btn btn-primary">
                       <span aria-hidden="true">💾</span>
                       <span>Simpan Perubahan</span>
                     </button>
-                    <p class="text-xs text-muted-foreground" id="saveFeedback">Menunggu perubahan…</p>
+                    <p class="text-xs text-muted" id="saveFeedback">Menunggu perubahan…</p>
                   </div>
                 </div>
               </div>
@@ -329,6 +211,7 @@ header(
           </div>
         </section>
 
+        <!-- Logs Section -->
         <section aria-labelledby="logsTitle" class="space-y-4">
           <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -336,53 +219,58 @@ header(
               <p class="text-sm text-slate-300">Klik untuk memuat snapshot 100 klik terakhir. Data dimuat malas untuk menjaga performa.</p>
             </div>
           </div>
+
           <details id="logsPanel" class="group rounded-2xl border border-white/15 bg-slate-950/80 p-6 shadow-xl transition">
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-white">
-              <span class="flex items-center gap-2"><span aria-hidden="true">🗂️</span> Snapshot Terbaru</span>
+              <span class="flex items-center gap-2">
+                <span aria-hidden="true">🗂️</span> Snapshot Terbaru
+              </span>
               <span class="text-xs text-slate-400">Klik untuk expand</span>
             </summary>
             <div class="mt-6 space-y-4" id="logsContainer">
               <div id="logsSkeleton" class="grid gap-2">
-                <div class="h-4 animate-pulse rounded bg-slate-800/70"></div>
-                <div class="h-4 animate-pulse rounded bg-slate-800/70"></div>
-                <div class="h-4 animate-pulse rounded bg-slate-800/70"></div>
+                <div class="skeleton h-4"></div>
+                <div class="skeleton h-4"></div>
+                <div class="skeleton h-4"></div>
               </div>
-              <div class="hidden max-h-72 overflow-auto rounded-xl border border-slate-800/80 bg-slate-900/70 font-mono text-xs text-slate-200 scroll-area" id="logsList"></div>
+              <div class="hidden scroll-area max-h-72 overflow-auto rounded-xl border border-slate-800/80 bg-slate-900/70 p-4 font-mono text-xs text-slate-200" id="logsList"></div>
               <p class="text-xs text-slate-400" id="logsMeta"></p>
             </div>
           </details>
         </section>
 
+        <!-- API Docs Section -->
         <section aria-labelledby="docsTitle" class="space-y-6">
           <div>
             <h2 id="docsTitle" class="text-xl font-semibold text-white">API Documentation</h2>
-            <p class="text-sm text-slate-300">Endpoint siap produksi dengan contoh kode siap salin. Gunakan warna primer untuk status aktif dan muted untuk pasif.</p>
+            <p class="text-sm text-slate-300">Endpoint siap produksi dengan contoh kode siap salin.</p>
           </div>
+
           <div class="grid gap-6 lg:grid-cols-2">
-            <article class="rounded-2xl border border-card bg-card p-6 text-card-foreground shadow-lg">
+            <article class="card">
               <header class="flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-slate-900">GET /api/v1/stats</h3>
-                <span class="rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white">Active</span>
+                <h3 class="text-lg font-semibold">GET /api/v1/stats</h3>
+                <span class="badge badge-success">Active</span>
               </header>
-              <p class="mt-3 text-sm text-muted-foreground">Mengambil agregasi klik window terakhir. Ideal untuk monitoring ringan.</p>
-              <div class="mt-4 rounded-xl border border-slate-200 bg-slate-900/90 p-4 text-left text-sm text-slate-100">
-                <pre class="whitespace-pre-wrap" id="codeStats">curl -s \
+              <p class="mt-3 text-sm text-muted">Mengambil agregasi klik window terakhir. Ideal untuk monitoring ringan.</p>
+              <div class="code-block mt-4">
+                <pre id="codeStats">curl -s \
   -H "X-API-Key: &lt;API_KEY&gt;" \
-  "<?= htmlspecialchars('https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/api.php?path=v1/stats&window=15', ENT_QUOTES) ?>"</pre>
+  "<?= htmlspecialchars('https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/api.php?path=v1/stats&window=15', ENT_QUOTES, 'UTF-8') ?>"</pre>
               </div>
-              <button data-copy="#codeStats" type="button" class="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 shadow-sm transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">
+              <button data-copy="#codeStats" type="button" class="btn btn-secondary mt-4">
                 📋 Salin Contoh
               </button>
             </article>
 
-            <article class="rounded-2xl border border-card bg-card p-6 text-card-foreground shadow-lg">
+            <article class="card">
               <header class="flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-slate-900">POST /api/v1/decision</h3>
-                <span class="rounded-full bg-slate-300 px-3 py-1 text-xs font-semibold text-slate-700">Muted</span>
+                <h3 class="text-lg font-semibold">POST /api/v1/decision</h3>
+                <span class="badge badge-muted">Muted</span>
               </header>
-              <p class="mt-3 text-sm text-muted-foreground">Membuat keputusan redirect sekaligus logging klik. Gunakan payload valid dengan sanitasi ketat.</p>
-              <div class="mt-4 rounded-xl border border-slate-200 bg-slate-900/90 p-4 text-left text-sm text-slate-100">
-                <pre class="whitespace-pre-wrap" id="codeDecision">curl -s -X POST \
+              <p class="mt-3 text-sm text-muted">Membuat keputusan redirect sekaligus logging klik. Gunakan payload valid dengan sanitasi ketat.</p>
+              <div class="code-block mt-4">
+                <pre id="codeDecision">curl -s -X POST \
   -H "Content-Type: application/json" \
   -d '{
     "click_id": "CID123",
@@ -391,36 +279,33 @@ header(
     "ip_address": "203.0.113.9",
     "user_lp": "https://landing.example"
   }' \
-  "<?= htmlspecialchars('https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/api.php?path=v1/decision', ENT_QUOTES) ?>"</pre>
+  "<?= htmlspecialchars('https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/api.php?path=v1/decision', ENT_QUOTES, 'UTF-8') ?>"</pre>
               </div>
-              <button data-copy="#codeDecision" type="button" class="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 shadow-sm transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">
+              <button data-copy="#codeDecision" type="button" class="btn btn-secondary mt-4">
                 📋 Salin Contoh
               </button>
             </article>
           </div>
         </section>
+
       </div>
     </main>
 
-    <div id="toast" class="fixed bottom-6 right-6 hidden max-w-sm rounded-xl border border-emerald-500/40 bg-emerald-500/20 px-4 py-3 text-sm text-emerald-100 shadow-xl"></div>
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
   </div>
 
-  <script nonce="<?= htmlspecialchars($nonce, ENT_QUOTES) ?>">
+  <script nonce="<?= htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') ?>">
+    'use strict';
+
     const root = document.documentElement;
     const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => document.querySelectorAll(selector);
+
     const storage = {
-      get key() {
-        return localStorage.getItem('srp_key') ?? '';
-      },
-      set key(value) {
-        localStorage.setItem('srp_key', value);
-      },
-      get theme() {
-        return localStorage.getItem('srp_theme') ?? 'dark';
-      },
-      set theme(value) {
-        localStorage.setItem('srp_theme', value);
-      }
+      get key() { return localStorage.getItem('srp_key') ?? ''; },
+      set key(value) { localStorage.setItem('srp_key', value); },
+      get theme() { return localStorage.getItem('srp_theme') ?? 'dark'; },
+      set theme(value) { localStorage.setItem('srp_theme', value); }
     };
 
     function applyTheme(mode) {
@@ -447,15 +332,15 @@ header(
 
     const toastEl = $('#toast');
     let toastTimer = 0;
+
     function toast(message, intent = 'success') {
       window.clearTimeout(toastTimer);
       toastEl.textContent = message;
-      toastEl.classList.remove('hidden');
-      toastEl.classList.add('toast-enter');
+      toastEl.classList.remove('hidden', 'toast-success', 'toast-error');
+      toastEl.classList.add(intent === 'error' ? 'toast-error' : 'toast-success');
       toastEl.setAttribute('role', intent === 'error' ? 'alert' : 'status');
       toastTimer = window.setTimeout(() => {
         toastEl.classList.add('hidden');
-        toastEl.classList.remove('toast-enter');
       }, 2400);
     }
 
@@ -488,13 +373,8 @@ header(
       const thumb = button.querySelector('.switch-thumb');
       button.dataset.on = isOn ? 'true' : 'false';
       button.setAttribute('aria-checked', isOn ? 'true' : 'false');
-      button.classList.toggle('bg-emerald-500', isOn);
-      button.classList.toggle('border-emerald-400/60', isOn);
-      button.classList.toggle('bg-slate-200', !isOn);
-      thumb.style.transform = isOn ? 'translateX(48px)' : 'translateX(0)';
       thumb.textContent = isOn ? 'ON' : 'OFF';
-      $('#systemStatusDot').classList.toggle('bg-emerald-500', isOn);
-      $('#systemStatusDot').classList.toggle('bg-rose-500', !isOn);
+      $('#systemStatusDot').style.backgroundColor = isOn ? 'var(--color-accent-success)' : 'var(--color-accent-danger)';
       $('#systemStatusText').textContent = isOn ? 'System ON' : 'System OFF';
     }
 
@@ -540,9 +420,7 @@ header(
     }
 
     async function toggleSystem() {
-      if (savingSystem) {
-        return;
-      }
+      if (savingSystem) return;
       if (!storage.key) {
         toast('Isi API Key terlebih dahulu.', 'error');
         return;
@@ -647,41 +525,44 @@ header(
     }
 
     function formatCountries(top) {
-      if (!Array.isArray(top) || top.length === 0) {
-        return '-';
-      }
+      if (!Array.isArray(top) || top.length === 0) return '-';
       return top.map((country) => `${country.cc}:${country.c}`).join(' · ');
     }
 
+    const statusIndicator = $('#statusIndicator');
     const statusPulse = $('#statusPulse');
     const statusText = $('#statusText');
 
     function setStatus(state) {
+      statusIndicator.className = 'status-indicator';
       switch (state) {
         case 'loading':
-          statusPulse.className = 'inline-flex h-2 w-2 animate-pulse rounded-full bg-sky-400';
+          statusIndicator.classList.add('status-info');
+          statusPulse.classList.add('pulse');
           statusText.textContent = 'Refreshing';
           break;
         case 'error':
-          statusPulse.className = 'inline-flex h-2 w-2 rounded-full bg-rose-500';
+          statusIndicator.classList.add('status-danger');
+          statusPulse.classList.remove('pulse');
           statusText.textContent = 'Error';
           break;
         case 'auth':
-          statusPulse.className = 'inline-flex h-2 w-2 rounded-full bg-amber-400';
+          statusIndicator.classList.add('status-warning');
+          statusPulse.classList.remove('pulse');
           statusText.textContent = 'API key?';
           break;
         default:
-          statusPulse.className = 'inline-flex h-2 w-2 rounded-full bg-emerald-400';
+          statusIndicator.classList.add('status-success');
+          statusPulse.classList.remove('pulse');
           statusText.textContent = 'Live';
       }
     }
 
     const chartStatus = $('#chartStatus');
     let statsChart;
+
     function ensureChart() {
-      if (statsChart) {
-        return statsChart;
-      }
+      if (statsChart) return statsChart;
       const ctx = document.getElementById('statsChart');
       statsChart = new window.Chart(ctx, {
         type: 'line',
@@ -734,11 +615,12 @@ header(
         ? new Date(payload.generated_at * 1000).toLocaleTimeString()
         : '-';
       $('#statsWindow').textContent = `${payload.window ?? 15}m`;
-      chartStatus.innerHTML = '<span aria-hidden="true" class="h-2 w-2 rounded-full bg-emerald-400"></span><span>Sinkron</span>';
+      chartStatus.innerHTML = '<span class="h-2 w-2 rounded-full bg-emerald-400"></span><span>Sinkron</span>';
       updateChart(payload.series ?? []);
     }
 
     let statsTimer = 0;
+
     async function refreshStats() {
       if (!storage.key) {
         setStatus('auth');
@@ -747,7 +629,7 @@ header(
       }
       window.clearTimeout(statsTimer);
       setStatus('loading');
-      chartStatus.innerHTML = '<span aria-hidden="true" class="h-2 w-2 rounded-full bg-sky-400 animate-pulse"></span><span>Updating</span>';
+      chartStatus.innerHTML = '<span class="h-2 w-2 rounded-full bg-sky-400 animate-pulse"></span><span>Updating</span>';
       try {
         const response = await fetch('api.php?path=v1/stats&window=15', {
           headers: { 'X-API-Key': storage.key },
@@ -764,7 +646,7 @@ header(
         setStatus('ok');
       } catch (error) {
         setStatus('error');
-        chartStatus.innerHTML = '<span aria-hidden="true" class="h-2 w-2 rounded-full bg-rose-500"></span><span>Error</span>';
+        chartStatus.innerHTML = '<span class="h-2 w-2 rounded-full bg-rose-500"></span><span>Error</span>';
         toast(`Gagal memuat statistik: ${error instanceof Error ? error.message : 'unknown'}`, 'error');
       } finally {
         statsTimer = window.setTimeout(refreshStats, 60000);
@@ -776,6 +658,7 @@ header(
     });
 
     let logsLoaded = false;
+
     async function loadLogs() {
       if (!storage.key) {
         toast('Isi API Key untuk memuat log.', 'error');
@@ -829,16 +712,12 @@ header(
       }
     });
 
-    document.querySelectorAll('button[data-copy]').forEach((button) => {
+    $$('button[data-copy]').forEach((button) => {
       button.addEventListener('click', () => {
         const targetSelector = button.getAttribute('data-copy');
-        if (!targetSelector) {
-          return;
-        }
+        if (!targetSelector) return;
         const element = document.querySelector(targetSelector);
-        if (!element) {
-          return;
-        }
+        if (!element) return;
         const text = element.textContent ?? '';
         if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
           navigator.clipboard.writeText(text).then(() => {

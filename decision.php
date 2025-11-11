@@ -56,7 +56,13 @@ if ($overflowed) {
     return;
 }
 
-$in  = json_decode($raw, true);
+try {
+    $in = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
+} catch (\JsonException $e) {
+    http_response_code(400);
+    echo '{\"ok\":false,\"error\":\"invalid_json\"}';
+    return;
+}
 if (!is_array($in)) { $in = []; }
 
 $result = decisionResponse($in);
