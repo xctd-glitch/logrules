@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: SRP REST API
+  version: 1.0.0
+servers:
+  - url: https://example.com/api/v1
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+security:
+  - apiKeyAuth: []
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      responses:
+        '200': { description: ok }
+  /decision:
+    post:
+      summary: Smart decision (A/B)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                click_id: { type: string }
+                country_code: { type: string, pattern: '^[A-Z]{2}$' }
+                user_agent: { type: string }
+                ip_address: { type: string }
+                user_lp: { type: string }
+      responses:
+        '200': { description: ok }
+  /config:
+    get:
+      summary: Read-only config for clients
+      responses:
+        '200': { description: ok }
+  /stats:
+    get:
+      summary: Stats last N minutes
+      parameters:
+        - in: query
+          name: window
+          schema: { type: integer, minimum: 1, maximum: 60, default: 15 }
+      responses:
+        '200': { description: ok }
+  /clicks:
+    get:
+      summary: Long-poll new clicks after given id
+      parameters:
+        - in: query
+          name: after_id
+          schema: { type: integer, minimum: 0, default: 0 }
+        - in: query
+          name: timeout
+          schema: { type: integer, minimum: 1, maximum: 25, default: 20 }
+      responses:
+        '200': { description: ok }

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ruleset name="Smart Redirect Platform">
+    <description>PSR-12 linting for project sources.</description>
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <file>bin/install</file>
+    <file>src</file>
+    <file>tests</file>
+    <exclude-pattern>vendor/</exclude-pattern>
+    <rule ref="PSR12"/>
+</ruleset>

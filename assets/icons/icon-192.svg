@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Smart Redirect Platform Icon 192</title>
+  <desc id="desc">Stylised arrows forming the letters SRP on a blue gradient background.</desc>
+  <defs>
+    <linearGradient id="bgGradient" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#2563eb" />
+      <stop offset="1" stop-color="#1e3a8a" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bgGradient)" rx="64" ry="64" />
+  <g fill="#f8fafc">
+    <path d="M128 368h112c52.8 0 96-43.2 96-96s-43.2-96-96-96h-64v64h64c17.6 0 32 14.4 32 32s-14.4 32-32 32h-48z" />
+    <path d="M272 144h96l-64 96 64 96h-96l-32-48z" />
+    <path d="M144 208v-64h-48v224h48v-96l48 32v-64z" />
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+RewriteEngine On
+
+SetEnv SRP_API_KEY e9d2a54340f604676c519ccc791b36af25a64a653256dca67218ee9bf335b0b3
+SetEnv SRP_CORS_ALLOW_ORIGIN https://e-xctd.com
+
+SetEnv SRP_DB_HOST localhost
+SetEnv SRP_DB_NAME exctdcom_hantuin
+SetEnv SRP_DB_USER exctdcom_hantuin
+SetEnv SRP_DB_PASS exctdcom_hantuinexctdcom_hantuinexctdcom_hantuin
+SetEnv SRP_DB_PORT 3306
+
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule ^ - [E=HTTP_AUTHORIZATION:%1]
+SetEnvIfNoCase Authorization "^(.*)" HTTP_AUTHORIZATION=$1
+
+# /api/v1/* -> /api.php?path=$1
+RewriteRule ^api/v1/(.*)$ api.php?path=$1 [QSA,PT,L]
+
+# (opsional) pastikan openapi.yaml diserve apa adanya
+<Files "openapi.yaml">
+  Require all granted
+  Header set Content-Type "application/yaml; charset=utf-8"
+</Files>
+
+# 3) Hardening minimal (opsional tapi sehat):
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "no-referrer"
+  Header set X-Frame-Options "DENY"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>

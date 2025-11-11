@@ -1,0 +1,130 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use InvalidArgumentException;
+use SRP\Installer\EnvironmentInstaller;
+use SRP\Installer\InstallOptions;
+use SRP\Installer\InstallResult;
+use Throwable;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+try {
+    [$options, $showHelp] = parseOptions($argv);
+    if ($showHelp) {
+        displayHelp($argv);
+        exit(0);
+    }
+
+    $installer = new EnvironmentInstaller(dirname(__DIR__));
+    $result = $installer->install($options);
+
+    outputSuccess($result);
+    exit(0);
+} catch (Throwable $e) {
+    fwrite(STDERR, '[ERROR] ' . $e->getMessage() . PHP_EOL);
+    exit(1);
+}
+
+/**
+ * @param list<string> $argv
+ * @return array{0: InstallOptions, 1: bool}
+ */
+function parseOptions(array $argv): array
+{
+    $longOptions = [
+        'help',
+        'force',
+        'db-host:',
+        'db-port:',
+        'db-name:',
+        'db-user:',
+        'db-pass:',
+        'api-key:',
+        'allow-origin:',
+    ];
+
+    $parsed = getopt('', $longOptions);
+    if ($parsed === false) {
+        throw new InvalidArgumentException('Failed to parse command options.');
+    }
+
+    $showHelp = isset($parsed['help']);
+
+    /** @var array<string, string> $overrides */
+    $overrides = [];
+    foreach ([
+        'db-host' => 'SRP_DB_HOST',
+        'db-port' => 'SRP_DB_PORT',
+        'db-name' => 'SRP_DB_NAME',
+        'db-user' => 'SRP_DB_USER',
+        'db-pass' => 'SRP_DB_PASS',
+        'api-key' => 'SRP_API_KEY',
+    ] as $option => $envKey) {
+        if (isset($parsed[$option])) {
+            $value = $parsed[$option];
+            if (is_array($value)) {
+                throw new InvalidArgumentException(sprintf('Option --%s cannot be provided multiple times.', $option));
+            }
+
+            $overrides[$envKey] = (string) $value;
+        }
+    }
+
+    $originsOption = $parsed['allow-origin'] ?? null;
+    if (is_array($originsOption)) {
+        $normalizedOrigins = [];
+        foreach ($originsOption as $origin) {
+            if (!is_string($origin)) {
+                throw new InvalidArgumentException('Each --allow-origin value must be a string.');
+            }
+
+            $normalizedOrigins[] = $origin;
+        }
+
+        $overrides['SRP_CORS_ALLOW_ORIGIN'] = implode(',', $normalizedOrigins);
+    } elseif (is_string($originsOption)) {
+        $overrides['SRP_CORS_ALLOW_ORIGIN'] = $originsOption;
+    }
+
+    return [new InstallOptions(isset($parsed['force']), $overrides), $showHelp];
+}
+
+/**
+ * @param list<string> $argv
+ */
+function displayHelp(array $argv): void
+{
+    $scriptArg = $argv[0] ?? 'install';
+    if (!is_string($scriptArg)) {
+        $scriptArg = (string) $scriptArg;
+    }
+
+    $script = basename($scriptArg);
+    $help = <<<TEXT
+Usage: {$script} [options]
+
+Options:
+    --force                Overwrite existing .env file.
+    --db-host=HOST         Set the database host (e.g. localhost).
+    --db-port=PORT         Set the database port (1-65535).
+    --db-name=NAME         Set the database name.
+    --db-user=USER         Set the database username.
+    --db-pass=PASS         Set the database password.
+    --api-key=KEY          Provide a custom API key (otherwise generated).
+    --allow-origin=ORIGIN  Allow an origin (repeatable, default empty).
+    --help                 Display this help text.
+TEXT;
+
+    fwrite(STDOUT, $help . PHP_EOL);
+}
+
+function outputSuccess(InstallResult $result): void
+{
+    fwrite(STDOUT, 'Environment file created at ' . $result->envPath() . PHP_EOL);
+    if ($result->apiKeyGenerated()) {
+        fwrite(STDOUT, 'A secure API key has been generated. Store it safely.' . PHP_EOL);
+    }
+}

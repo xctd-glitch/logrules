@@ -1,0 +1,94 @@
+name: CI - Quality Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  quality-gate:
+    name: Quality Gate (PHP 8.3)
+    runs-on: ubuntu-latest
+    env:
+      COMPOSER_ALLOW_SUPERUSER: "1"
+      COMPOSER_NO_INTERACTION: "1"
+      COMPOSER_MEMORY_LIMIT: "-1"
+
+    steps:
+      - name: Checkout (with LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup PHP 8.3 and tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          extensions: mbstring, pdo, pdo_mysql, xml, intl, json, zip
+
+      - name: Validate composer.json
+        run: composer validate --no-check-publish --strict
+
+      - name: Install composer dependencies (including dev)
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run PHPStan (level max)
+        run: |
+          if [ -f vendor/bin/phpstan ]; then
+            vendor/bin/phpstan analyse --no-progress --error-format=github --memory-limit=2G --level=max || exit 1
+          else
+            echo "phpstan not installed; skipping" && exit 1
+          fi
+
+      - name: Run PHPCS (PSR-12)
+        run: |
+          if [ -f vendor/bin/phpcs ]; then
+            vendor/bin/phpcs --standard=PSR12 --extensions=php src tests || { echo "PHPCS violations found"; exit 1; }
+          else
+            echo "phpcs not installed; skipping" && exit 1
+          fi
+
+      - name: Run php-cs-fixer (dry-run)
+        run: |
+          if [ -f vendor/bin/php-cs-fixer ]; then
+            vendor/bin/php-cs-fixer fix --dry-run --diff --show-progress=bar --using-cache=yes || { echo "php-cs-fixer violations found"; exit 1; }
+          else
+            echo "php-cs-fixer not installed; skipping" && exit 1
+          fi
+
+
+      - name: Run PHPUnit (fail on warnings via phpunit.xml.dist)
+        run: |
+          if [ -f vendor/bin/phpunit ]; then
+            if [ -f phpunit.xml ]; then
+              CONFIG_FILE="phpunit.xml"
+            elif [ -f phpunit.xml.dist ]; then
+              CONFIG_FILE="phpunit.xml.dist"
+            else
+              echo "No PHPUnit configuration file found" && exit 1
+            fi
+            vendor/bin/phpunit --configuration "${CONFIG_FILE}" --log-junit junit.xml || { echo "PHPUnit failed"; exit 1; }
+          else
+            echo "phpunit not installed; skipping" && exit 1
+          fi
+        continue-on-error: false
+
+      - name: Upload reports (JUnit & phpstan)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-reports
+          path: |
+            junit.xml
+            phpstan-report.* || true
+            phpstan-result.* || true
+            vendor/bin/phpunit || true
+
+      - name: Show last commits (for debug)
+        run: git --no-pager log -n 5 --pretty=oneline
