@@ -164,6 +164,26 @@ function assertRedirectUrl(string $url): string
     if (!preg_match('~^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$~i', $host)) {
         return '';
     }
+    
+    // Prevent CRLF injection
+    if (preg_match('/[\r\n\x00]/', $url)) {
+        return '';
+    }
+    
+    // Additional validation: prevent localhost, private IPs, and suspicious patterns
+    $suspiciousPatterns = [
+        '~^(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0|\\[::1\\])~i',
+        '~^10\\.~',
+        '~^172\\.(1[6-9]|2[0-9]|3[01])\\.~',
+        '~^192\\.168\\.~',
+        '~^169\\.254\\.~',
+    ];
+    
+    foreach ($suspiciousPatterns as $pattern) {
+        if (preg_match($pattern, $host)) {
+            return '';
+        }
+    }
 
     return rtrim($url, '/');
 }
@@ -592,13 +612,21 @@ function decisionResponse(
     $clockCallback = $clock ?? static fn (): int => time();
     $now = (int) $clockCallback();
 
-    $fallback = '/_meetups/?' . http_build_query([
+    // Sanitize fallback URL construction to prevent injection
+    $fallbackQuery = http_build_query([
         'click_id' => strtolower($cid),
         'country_code' => strtolower($cc),
         'user_agent' => strtolower($device),
         'ip_address' => $ipInput !== '' ? $ipInput : $ipClient,
         'user_lp' => strtolower($lp),
     ], '', '&', PHP_QUERY_RFC3986);
+    
+    // Validate fallback query doesn't contain CRLF
+    if (preg_match('/[\r\n\x00]/', $fallbackQuery)) {
+        $fallbackQuery = '';
+    }
+    
+    $fallback = '/_meetups/' . ($fallbackQuery !== '' ? '?' . $fallbackQuery : '');
 
     $config = $configCallback();
     $target = $fallback;
@@ -646,6 +674,12 @@ function decisionResponse(
 
     if ($shouldAttemptRedirect) {
         $targetCandidate = rtrim($config['redirect_url'], '/');
+        
+        // Final validation before assigning target
+        if (preg_match('/[\r\n\x00]/', $targetCandidate)) {
+            $targetCandidate = $fallback;
+        }
+        
         if ($ruleMode === 'static_route') {
             $decision = 'A';
             $target = $targetCandidate;

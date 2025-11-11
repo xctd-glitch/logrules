@@ -67,17 +67,86 @@ function resolveIpAddress(): string
 function fallbackRedirect(string $reason, string $baseUrl): void
 {
     $target = $baseUrl !== '' ? $baseUrl : '/';
-    $separator = str_contains($target, '?') ? '&' : '?';
-    $location = $target . $separator . 'reason=' . rawurlencode($reason);
+    
+    // Validate target URL to prevent open redirect
+    if (!isValidRedirectTarget($target)) {
+        $target = '/';
+    }
+    
+    // Sanitize reason to prevent header injection
+    $sanitizedReason = preg_replace('/[^\w\-]/', '', $reason);
+    $sanitizedReason = substr($sanitizedReason, 0, 64);
+    
+    // Parse URL to safely append query parameter
+    $parsed = parse_url($target);
+    if ($parsed === false || !is_array($parsed)) {
+        $target = '/';
+        $parsed = ['path' => '/'];
+    }
+    
+    $query = isset($parsed['query']) ? $parsed['query'] . '&' : '';
+    $query .= 'reason=' . rawurlencode($sanitizedReason);
+    
+    $location = ($parsed['path'] ?? '/');
+    if ($query !== '') {
+        $location .= '?' . $query;
+    }
+    if (isset($parsed['fragment'])) {
+        $location .= '#' . $parsed['fragment'];
+    }
 
     header('Location: ' . $location, true, 302);
     exit;
 }
 
+function isValidRedirectTarget(string $url): bool
+{
+    $url = trim($url);
+    if ($url === '') {
+        return false;
+    }
+    
+    // Allow relative paths starting with /
+    if (str_starts_with($url, '/') && !str_starts_with($url, '//')) {
+        // Validate path doesn't contain dangerous characters
+        if (preg_match('/[\r\n\x00]/', $url)) {
+            return false;
+        }
+        return true;
+    }
+    
+    // For absolute URLs, validate scheme and host
+    $parsed = parse_url($url);
+    if (!is_array($parsed)) {
+        return false;
+    }
+    
+    // Must have valid scheme
+    if (!isset($parsed['scheme']) || !in_array(strtolower($parsed['scheme']), ['http', 'https'], true)) {
+        return false;
+    }
+    
+    // Must have valid host
+    if (!isset($parsed['host']) || trim($parsed['host']) === '') {
+        return false;
+    }
+    
+    // Prevent CRLF injection
+    if (preg_match('/[\r\n\x00]/', $url)) {
+        return false;
+    }
+    
+    return true;
+}
+
 $apiUrl = env('SRP_DECISION_URL');
 $apiKey = env('SRP_DECISION_KEY');
 $fallbackBase = env('SRP_FALLBACK_URL', '/');
-if ($fallbackBase !== '' && !str_starts_with($fallbackBase, '/') && !filter_var($fallbackBase, FILTER_VALIDATE_URL)) {
+if ($fallbackBase !== '') {
+    if (!isValidRedirectTarget($fallbackBase)) {
+        $fallbackBase = '/';
+    }
+} else {
     $fallbackBase = '/';
 }
 
@@ -170,7 +239,12 @@ if ($target === '') {
     fallbackRedirect('empty_target', $fallbackBase);
 }
 
-if (!str_starts_with($target, '/') && !filter_var($target, FILTER_VALIDATE_URL)) {
+if (!isValidRedirectTarget($target)) {
+    fallbackRedirect('invalid_target', $fallbackBase);
+}
+
+// Final sanitization check before redirect
+if (preg_match('/[\r\n\x00]/', $target)) {
     fallbackRedirect('invalid_target', $fallbackBase);
 }
 
